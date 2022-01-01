@@ -1,11 +1,10 @@
-// routes/index.js
-
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var dbConfig = require('../config/dbConfig.json');
 
 mongoose.connect(
-  'mongodb+srv://dbUser:1234abcd@my-cluster.tm8gb.mongodb.net/memopad',
+  `mongodb+srv://dbUser:${dbConfig.pw}@my-cluster.tm8gb.mongodb.net/memopad`,
   { useNewUrlParser: true }
 );
 var db = mongoose.connection;
@@ -52,38 +51,6 @@ router.post('/write', function (req, res, next) {
       throw err;
     } else {
       res.json({ status: 'SUCCESS' });
-    }
-  });
-});
-
-router.post('/del', function (req, res, next) {
-  var _id = req.body._id;
-  memoModel.deleteOne({ _id: _id }, function (err, result) {
-    if (err) {
-      throw err;
-    } else {
-      res.json({ status: 'SUCCESS' });
-    }
-  });
-});
-
-router.post('/modify', function (req, res, next) {
-  var _id = req.body._id;
-  var contents = req.body.contents;
-
-  memoModel.findOne({ _id: _id }, function (err, memo) {
-    if (err) {
-      throw err;
-    } else {
-      memo.contents = contents;
-
-      memo.save(function (err) {
-        if (err) {
-          throw err;
-        } else {
-          res.json({ status: 'SUCCESS' });
-        }
-      });
     }
   });
 });
